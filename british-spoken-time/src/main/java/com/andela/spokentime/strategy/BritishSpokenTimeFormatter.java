@@ -1,74 +1,71 @@
 package com.andela.spokentime.strategy;
 
 import com.andela.spokentime.dto.SpokenTimeResponse;
-import com.andela.spokentime.exception.InvalidTimeFormatException;
-import com.andela.spokentime.util.NumberWordMapper;
+import com.andela.spokentime.dto.TimeContext;
+import com.andela.spokentime.util.NumberWordMapperUtil;
+import com.andela.spokentime.util.TimeUtils;
+import com.andela.spokentime.validator.TimeValidator;
 
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 public class BritishSpokenTimeFormatter implements SpokenTimeFormatter {
 
-    private static final Set<Integer> idiomaticPast = Set.of(5, 10, 15, 20, 25);
-    private static final Set<Integer> idiomaticTo = Set.of(35, 40, 45, 50, 55);
+    private static final int MIDNIGHT_HOUR = 0;
+    private static final int NOON_HOUR = 12;
+    private static final int MINUTES_IN_HOUR = 60;
+    private static final int HOURS_IN_DAY = 24;
+    private static final int HALF_HOUR = 30;
+    private static final Set<Integer> IDIOMATIC_PAST = Set.of(5, 10, 15, 20, 25);
+    private static final Set<Integer> IDIOMATIC_TO = Set.of(35, 40, 45, 50, 55);
+
+
+    private static final Map<Integer, Function<TimeContext, String>> SPECIAL_CASES = Map.of(
+            0, ctx -> ctx.hourWord() + " o'clock",
+            15, ctx -> "quarter past " + ctx.hourWord(),
+            30, ctx -> "half past " + ctx.hourWord(),
+            45, ctx -> "quarter to " + ctx.nextHourWord()
+    );
 
     @Override
     public SpokenTimeResponse format(String time) {
-        if (time == null || !time.matches("\\d{4}")) {
-            throw new InvalidTimeFormatException("Time must be in HHmm format");
-        }
+        TimeValidator.validate(time);
 
         int hour24 = Integer.parseInt(time.substring(0, 2));
         int minute = Integer.parseInt(time.substring(2, 4));
 
-        if (hour24 < 0 || hour24 > 23 || minute < 0 || minute > 59) {
-            throw new InvalidTimeFormatException("Invalid hour or minute");
+        int hour12 = TimeUtils.to12Hour(hour24);
+        int nextHour12 = TimeUtils.to12Hour((hour24 + 1) % HOURS_IN_DAY);
+
+        String hourWord = NumberWordMapperUtil.toHourWord(hour12);
+        String nextHourWord = NumberWordMapperUtil.toHourWord(nextHour12);
+        TimeContext ctx = new TimeContext(hourWord, nextHourWord, hour24, minute);
+
+        if (hour24 == MIDNIGHT_HOUR && minute == 0) return spoken("midnight");
+        if (hour24 == NOON_HOUR && minute == 0) return spoken("noon");
+
+        if (SPECIAL_CASES.containsKey(minute)) {
+            return spoken(SPECIAL_CASES.get(minute).apply(ctx));
         }
 
-        int hour12 = hour24 % 12 == 0 ? 12 : hour24 % 12;
-        int nextHour24 = (hour24 + 1) % 24;
-        int nextHour12 = nextHour24 % 12 == 0 ? 12 : nextHour24 % 12;
-
-        String hourWord = NumberWordMapper.toHourWord(hour12);
-        String nextHourWord = NumberWordMapper.toHourWord(nextHour12);
-
-        if (hour24 == 0 && minute == 0) {
-            return new SpokenTimeResponse("midnight");
-        }
-
-        if (hour24 == 12 && minute == 0) {
-            return new SpokenTimeResponse("noon");
-        }
-
-        if (minute == 0) {
-            return new SpokenTimeResponse(hourWord + " o'clock");
-        }
-
-        if (minute == 15) {
-            return new SpokenTimeResponse("quarter past " + hourWord);
-        }
-
-        if (minute == 30) {
-            return new SpokenTimeResponse("half past " + hourWord);
-        }
-
-        if (minute == 45) {
-            return new SpokenTimeResponse("quarter to " + nextHourWord);
-        }
-
-        if (minute < 30) {
-            if (idiomaticPast.contains(minute)) {
-                return new SpokenTimeResponse(NumberWordMapper.toMinuteWord(minute) + " past " + hourWord);
-            } else {
-                return new SpokenTimeResponse(hourWord + " " + NumberWordMapper.toMinuteWord(minute));
+        if (minute < HALF_HOUR) {
+            if (IDIOMATIC_PAST.contains(minute)) {
+                return spoken(NumberWordMapperUtil.toMinuteWord(minute) + " past " + hourWord);
             }
+            return spoken(hourWord + " " + NumberWordMapperUtil.toMinuteWord(minute));
         }
 
         // minute > 30
-        if (idiomaticTo.contains(minute)) {
-            int minsTo = 60 - minute;
-            return new SpokenTimeResponse(NumberWordMapper.toMinuteWord(minsTo) + " to " + nextHourWord);
-        } else {
-            return new SpokenTimeResponse(hourWord + " " + NumberWordMapper.toMinuteWord(minute));
+        if (IDIOMATIC_TO.contains(minute)) {
+            int minsTo = MINUTES_IN_HOUR - minute;
+            return spoken(NumberWordMapperUtil.toMinuteWord(minsTo) + " to " + nextHourWord);
         }
+
+        return spoken(hourWord + " " + NumberWordMapperUtil.toMinuteWord(minute));
+    }
+
+    private SpokenTimeResponse spoken(String phrase) {
+        return new SpokenTimeResponse(phrase);
     }
 }

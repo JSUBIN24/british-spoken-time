@@ -2,6 +2,8 @@ package com.andela.spokentime.strategy;
 
 import com.andela.spokentime.dto.SpokenTimeResponse;
 import com.andela.spokentime.exception.InvalidTimeFormatException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -11,7 +13,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BritishSpokenTimeFormatterTest {
 
-    private final BritishSpokenTimeFormatter formatter = new BritishSpokenTimeFormatter();
+    private BritishSpokenTimeFormatter formatter;
+
+    @BeforeEach
+    void setUp() {
+        formatter = new BritishSpokenTimeFormatter();
+    }
 
     @ParameterizedTest
     @CsvFileSource(resources = "/british_spoken_time_full.csv")
@@ -50,5 +57,32 @@ class BritishSpokenTimeFormatterTest {
         assertThrows(InvalidTimeFormatException.class, () -> formatter.format(input));
     }
 
+
+    @Test
+    void testIdiomaticPast() {
+        assertEquals("five past three", formatter.format("0305").spokenTime());
+        assertEquals("ten past three", formatter.format("0310").spokenTime());
+        assertEquals("quarter past three", formatter.format("0315").spokenTime());
+        assertEquals("twenty past three", formatter.format("0320").spokenTime());
+        assertEquals("twenty five past three", formatter.format("0325").spokenTime());
+    }
+
+    @Test
+    void testIdiomaticTo() {
+        assertEquals("twenty five to four", formatter.format("0335").spokenTime());
+        assertEquals("twenty to four", formatter.format("0340").spokenTime());
+        assertEquals("quarter to four", formatter.format("0345").spokenTime());
+        assertEquals("ten to four", formatter.format("0350").spokenTime());
+        assertEquals("five to four", formatter.format("0355").spokenTime());
+    }
+
+    @Test
+    void testInvalidInputs() {
+        assertThrows(InvalidTimeFormatException.class, () -> formatter.format(null));
+        assertThrows(InvalidTimeFormatException.class, () -> formatter.format("012"));
+        assertThrows(InvalidTimeFormatException.class, () -> formatter.format("abcd"));
+        assertThrows(InvalidTimeFormatException.class, () -> formatter.format("2560"));
+        assertThrows(InvalidTimeFormatException.class, () -> formatter.format("1260"));
+    }
 
 }

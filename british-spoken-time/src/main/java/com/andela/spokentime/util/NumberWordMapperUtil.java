@@ -2,7 +2,7 @@ package com.andela.spokentime.util;
 
 import java.util.Map;
 
-public final class NumberWordMapper {
+public final class NumberWordMapperUtil {
 
 
     private static final Map<Integer, String> HOURS = Map.ofEntries(
