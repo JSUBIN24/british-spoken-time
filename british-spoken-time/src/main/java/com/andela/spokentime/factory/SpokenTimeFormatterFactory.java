@@ -8,11 +8,9 @@ public class SpokenTimeFormatterFactory {
         if (locale == null) {
             throw new IllegalArgumentException("Locale cannot be null");
         }
-        switch (locale.toLowerCase()) {
-            case "british":
-                return new BritishSpokenTimeFormatter();
-            default:
-                throw new IllegalArgumentException("Unsupported locale: " + locale);
-        }
+        return switch (locale.toLowerCase()) {
+            case "british" -> new BritishSpokenTimeFormatter();
+            default -> throw new IllegalArgumentException("Unsupported locale: " + locale);
+        };
     }
 }
