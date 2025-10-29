@@ -32,8 +32,9 @@ public class BritishSpokenTimeFormatter implements SpokenTimeFormatter {
     public SpokenTimeResponse format(String time) {
         TimeValidator.validate(time);
 
-        int hour24 = Integer.parseInt(time.substring(0, 2));
-        int minute = Integer.parseInt(time.substring(2, 4));
+        String[] split = time.split(":");
+        int hour24 = Integer.parseInt(split[0]);
+        int minute = Integer.parseInt(split[1]);
 
         int hour12 = TimeUtils.to12Hour(hour24);
         int nextHour12 = TimeUtils.to12Hour((hour24 + 1) % HOURS_IN_DAY);
