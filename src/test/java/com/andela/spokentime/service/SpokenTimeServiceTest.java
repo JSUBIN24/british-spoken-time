@@ -16,56 +16,56 @@ class SpokenTimeServiceIntegrationTest {
 
     @Test
     void testMidnight() {
-        SpokenTimeResponse response = spokenTimeService.getSpokenTime("0000", "british");
+        SpokenTimeResponse response = spokenTimeService.getSpokenTime("00:00", "british");
         assertEquals("midnight", response.spokenTime());
     }
 
     @Test
     void testNoon() {
-        SpokenTimeResponse response = spokenTimeService.getSpokenTime("1200", "british");
+        SpokenTimeResponse response = spokenTimeService.getSpokenTime("12:00", "british");
         assertEquals("noon", response.spokenTime());
     }
 
     @Test
     void testQuarterPast() {
-        SpokenTimeResponse response = spokenTimeService.getSpokenTime("0315", "british");
+        SpokenTimeResponse response = spokenTimeService.getSpokenTime("03:15", "british");
         assertEquals("quarter past three", response.spokenTime());
     }
 
     @Test
     void testHalfPast() {
-        SpokenTimeResponse response = spokenTimeService.getSpokenTime("1230", "british");
+        SpokenTimeResponse response = spokenTimeService.getSpokenTime("12:30", "british");
         assertEquals("half past twelve", response.spokenTime());
     }
 
     @Test
     void testQuarterTo() {
-        SpokenTimeResponse response = spokenTimeService.getSpokenTime("0345", "british");
+        SpokenTimeResponse response = spokenTimeService.getSpokenTime("03:45", "british");
         assertEquals("quarter to four", response.spokenTime());
     }
 
     @Test
     void testExactMinute() {
-        SpokenTimeResponse response = spokenTimeService.getSpokenTime("0331", "british");
+        SpokenTimeResponse response = spokenTimeService.getSpokenTime("03:31", "british");
         assertEquals("three thirty one", response.spokenTime());
     }
 
     @Test
     void testFivePast() {
-        SpokenTimeResponse response = spokenTimeService.getSpokenTime("0505", "british");
+        SpokenTimeResponse response = spokenTimeService.getSpokenTime("05:05", "british");
         assertEquals("five past five", response.spokenTime());
     }
 
     @Test
     void testTwentyFiveTo() {
-        SpokenTimeResponse response = spokenTimeService.getSpokenTime("0535", "british");
+        SpokenTimeResponse response = spokenTimeService.getSpokenTime("05:35", "british");
         assertEquals("twenty five to six", response.spokenTime());
     }
 
     @Test
     void testInvalidInput() {
         assertThrows(InvalidTimeFormatException.class, () -> {
-            spokenTimeService.getSpokenTime("9999", "british");
+            spokenTimeService.getSpokenTime("99:99", "british");
         });
     }
 }

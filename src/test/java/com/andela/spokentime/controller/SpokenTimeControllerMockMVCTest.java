@@ -24,7 +24,7 @@ class SpokenTimeControllerMockMVCTest {
     private SpokenTimeService spokenTimeService;
 
     @Test
-    public void testGetSpokenTime() throws Exception {
+    void testGetSpokenTime() throws Exception {
 
         when(spokenTimeService.getSpokenTime(anyString(), anyString()))
                 .thenReturn(new SpokenTimeResponse("noon"));
