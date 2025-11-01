@@ -5,6 +5,7 @@ import com.andela.spokentime.service.SpokenTimeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,11 +30,19 @@ class SpokenTimeControllerMockMVCTest {
         when(spokenTimeService.getSpokenTime(anyString(), anyString()))
                 .thenReturn(new SpokenTimeResponse("noon"));
 
-        mockMvc.perform(get("/spoken-time")
-                        .param("time", "1200")
-                        .param("locale", "british"))
+        String requestBody = """
+                {
+                    "time": "12:00",
+                    "locale": "british"
+                }
+                """;
+
+        mockMvc.perform(post("/spoken-time")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.spokenTime").value("noon"));
+
     }
 
 
