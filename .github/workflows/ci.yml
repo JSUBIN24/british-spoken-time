@@ -1,0 +1,35 @@
+name: CI Build & SonarQube
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build and run tests with coverage
+        run: mvn clean verify
+
+      - name: Upload JaCoCo coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-report
+          path: target/site/jacoco
+
+      - name: SonarQube analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn sonar:sonar -Dsonar.projectKey=JSUBIN24_british-spoken-time -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONAR_TOKEN}
