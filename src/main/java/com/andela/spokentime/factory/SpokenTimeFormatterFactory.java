@@ -3,7 +3,6 @@ package com.andela.spokentime.factory;
 import com.andela.spokentime.strategy.BritishSpokenTimeFormatter;
 import com.andela.spokentime.strategy.SpokenTimeFormatter;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 

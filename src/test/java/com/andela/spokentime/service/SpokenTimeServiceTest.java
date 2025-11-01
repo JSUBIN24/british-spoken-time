@@ -4,7 +4,6 @@ import com.andela.spokentime.dto.SpokenTimeResponse;
 import com.andela.spokentime.exception.InvalidTimeFormatException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,8 +64,6 @@ class SpokenTimeServiceIntegrationTest {
 
     @Test
     void testInvalidInput() {
-        assertThrows(InvalidTimeFormatException.class, () -> {
-            spokenTimeService.getSpokenTime("99:99", "british");
-        });
+        assertThrows(InvalidTimeFormatException.class, () -> spokenTimeService.getSpokenTime("99:99", "british"));
     }
 }
