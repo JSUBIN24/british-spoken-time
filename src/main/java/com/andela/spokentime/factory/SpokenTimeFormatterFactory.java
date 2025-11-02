@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 
 public class SpokenTimeFormatterFactory {
 
+    private SpokenTimeFormatterFactory() {
+    }
 
     public static final Map<String, Supplier<SpokenTimeFormatter>> FORMATTER = Map.of("british", BritishSpokenTimeFormatter::new);
 

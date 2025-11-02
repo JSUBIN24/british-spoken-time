@@ -4,6 +4,9 @@ import java.util.Map;
 
 public final class NumberWordMapperUtil {
 
+    private NumberWordMapperUtil() {
+        throw new UnsupportedOperationException("Utility class should not be instantiated");
+    }
 
     private static final Map<Integer, String> HOURS = Map.ofEntries(
             Map.entry(1, "one"),
@@ -20,7 +23,7 @@ public final class NumberWordMapperUtil {
             Map.entry(12, "twelve")
     );
 
-    private static final Map<Integer, String> MINUTES = Map.ofEntries(
+    private static final Map<Integer, String> MINUTES = Map.<Integer, String>ofEntries(
             Map.entry(1, "one"),
             Map.entry(2, "two"),
             Map.entry(3, "three"),
