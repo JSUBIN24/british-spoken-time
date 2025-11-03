@@ -11,13 +11,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BritishSpokenTimeFormatterTest {
+class BritishSpokenTimeFormatterImplementationTest {
 
-    private BritishSpokenTimeFormatter formatter;
+    private BritishSpokenTimeFormatterImplementation formatter;
 
     @BeforeEach
     void setUp() {
-        formatter = new BritishSpokenTimeFormatter();
+        formatter = new BritishSpokenTimeFormatterImplementation();
     }
 
     @ParameterizedTest
@@ -46,8 +46,7 @@ class BritishSpokenTimeFormatterTest {
             "23:00, eleven o'clock"
     })
     void testValidTimesInput(String input, String expected) {
-        SpokenTimeResponse response = formatter.format(input);
-        assertEquals(expected, response.spokenTime());
+        testValidTimes(input,expected);
     }
 
 

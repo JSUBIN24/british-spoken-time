@@ -8,14 +8,14 @@ import com.andela.spokentime.validator.TimeValidator;
 
 import java.util.List;
 
-public class BritishSpokenTimeFormatter implements SpokenTimeFormatter {
+public class BritishSpokenTimeFormatterImplementation implements SpokenTimeFormatter {
 
     private static final int HOURS_IN_DAY = 24;
 
     private final List<TimeFormatStrategy> strategies;
 
 
-    public BritishSpokenTimeFormatter() {
+    public BritishSpokenTimeFormatterImplementation() {
         strategies = List.of(
                 new MidnightNoonStrategy(),
                 new SpecialCaseStrategy(),

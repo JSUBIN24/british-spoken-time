@@ -1,6 +1,6 @@
 package com.andela.spokentime.factory;
 
-import com.andela.spokentime.strategy.BritishSpokenTimeFormatter;
+import com.andela.spokentime.strategy.BritishSpokenTimeFormatterImplementation;
 import com.andela.spokentime.strategy.SpokenTimeFormatter;
 
 import java.util.Map;
@@ -11,7 +11,7 @@ public class SpokenTimeFormatterFactory {
     private SpokenTimeFormatterFactory() {
     }
 
-    public static final Map<String, Supplier<SpokenTimeFormatter>> FORMATTER = Map.of("british", BritishSpokenTimeFormatter::new);
+    public static final Map<String, Supplier<SpokenTimeFormatter>> FORMATTER = Map.of("british", BritishSpokenTimeFormatterImplementation::new);
 
     public static SpokenTimeFormatter getFormatter(String locale) {
         if (locale == null) {
